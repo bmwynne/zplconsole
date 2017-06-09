@@ -52,32 +52,5 @@ class CpConsole(threading.Thread):
             else:
                 cmd = "%s\r" % input
                 self.modem.enqueue_command(cmd)
-                #self.taskMgr.enqueue_command(input)
-            '''
-            elif input == 'commat':
-                self.comm.comm_at()
-            elif input == 'commcfg':
-                self.comm.comm_config()
-            elif input == 'commcnx':
-                self.comm.comm_connect()
-            elif input == 'commres':
-                self.comm.comm_resume()
-            elif input == 'commsus':
-                self.comm.comm_suspend()
-            elif input == 'commclose':
-                self.comm.comm_close()
-            elif input == 'commhttp':
-                self.comm.comm_http()
-            elif input == 'commpost':
-                self.comm.comm_post()
-            elif input == 'commsend':
-                self.comm.comm_send()
-            elif input == '+++':
-                self.modem.enqueue_command("+++")
-            else:
-                cmd = "%s\r" % input
-                self.modem.enqueue_command(cmd)
-                #self.taskMgr.enqueue_command(input)
-            '''
-                
+
             time.sleep(.0001)

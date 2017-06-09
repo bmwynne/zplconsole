@@ -62,13 +62,11 @@ class CpModemDefs:
     CMD_QRYCTX = "AT#SGACT?\r"
     CMD_QRYSIG = "AT+CSQ?\r"
     CMD_QRYNET = "AT+CREG?\r"
-    #CMD_SKTDIAL = "AT#SD=1,0,80,\"voidworx.com\",0,0\r"
     CMD_SKTDIAL = "AT#SD=1,0,%s,\"%s\",0,0\r"
     CMD_SKTESC = "+++"
     CMD_SKTRESUME = "AT#SO=1\r"
     CMD_SKTCLOSE = "AT#SH=1\r"
     CMD_HTTP = "GET /pings HTTP/1.1\r\nHost: voidworx.com\r\nConnection: keep-alive\r\n\r\n"
-    #CMD_HTTPPOST = "POST %s HTTP/1.1\r\ncontent-type:application/x-www-form-urlencoded;charset=utf-8\r\nhost: %s\r\ncontent-length:%d\r\n\r\n%s"
     CMD_HTTPPOST = "POST %s HTTP/1.1\r\ncontent-type:application/json\r\nhost: %s\r\ncontent-length:%d\r\n\r\n%s"
 
 
@@ -91,8 +89,6 @@ class CpModem(threading.Thread):
         self.modemBusy = False
         self.modemResult = CpModemResult()
         self.modemToken = ""
-        #self.data_buffer = ""
-        #self.ser = serial.Serial(device, baudrate=115200, parity='N', stopbits=1, bytesize=8, xonxoff=0, rtscts=0)
         self.ser = serial.Serial(CpDefs.ModemPort, baudrate=CpDefs.ModemBaudrate, parity='N', stopbits=1, bytesize=8, xonxoff=0, rtscts=0)
         threading.Thread.__init__(self)
         
@@ -123,10 +119,7 @@ class CpModem(threading.Thread):
     
     def modem_send(self, cmd):
         print 'sending modem command ', cmd
-        #self.__lock.acquire()
-        #self.ser.write(cmd + '\r')
         self.ser.write(cmd)
-        #self.__lock.release()
     
     
     def modem_handler(self):
@@ -145,28 +138,19 @@ class CpModem(threading.Thread):
                 self.modem_send(modem_command)
                 continue
             
-            #if(self.ser.outWaiting() > 0):
-                #print 'modem.outWaiting=', self.ser.outWaiting()
-            
-            #self.__lock.acquire()
             while(self.ser.inWaiting() > 0):
-                #print 'modem has data!!!'
                 tmp_char = self.ser.read(1)
                 if(tmp_char == '\r'):
-                    #self.data_buffer.put(tmp_buffer, block=True, timeout=1)
                     result = self.modem_parse_result(tmp_buffer)
                     print 'received ', tmp_buffer
                     # Make sure we received something worth processing
                     if(result.ResultCode > CpModemResultCode.RESULT_UNKNOWN):
-                        #print 'known result code', result
                         if(self.modemResponseCallbackFunc != None):
                             self.modemResponseCallbackFunc(result)
                             self.modemBusy = False
-                    #print 'modem response ', tmp_buffer
                     tmp_buffer= ""
                 else:
                     tmp_buffer += tmp_char
-            #self.__lock.release()
             time.sleep(.005)
                     
                     

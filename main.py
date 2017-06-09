@@ -18,7 +18,7 @@ def inetDataReceived(data):
 
 if __name__ == '__main__':
 
-    print "Modem init complete!"
+    print "Init complete: ready for serial communication!"
 
     modemThread = CpModem(modemDataReceived)
     modemThread.start()
