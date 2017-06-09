@@ -118,7 +118,7 @@ class CpModem(threading.Thread):
             self.ser.close()
     
     def modem_send(self, cmd):
-        print 'sending modem command ', cmd
+        print 'sending zpl command ', cmd
         self.ser.write(cmd)
     
     
@@ -142,11 +142,11 @@ class CpModem(threading.Thread):
                 tmp_char = self.ser.read(1)
                 if(tmp_char == '\r'):
                     result = self.modem_parse_result(tmp_buffer)
-                    print 'received ', tmp_buffer
+                    print tmp_buffer
                     # Make sure we received something worth processing
                     if(result.ResultCode > CpModemResultCode.RESULT_UNKNOWN):
                         if(self.modemResponseCallbackFunc != None):
-                            self.modemResponseCallbackFunc(result)
+                            #self.modemResponseCallbackFunc(result)
                             self.modemBusy = False
                     tmp_buffer= ""
                 else:
